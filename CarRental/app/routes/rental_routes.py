@@ -32,14 +32,19 @@ def rent_car(car_id):
     return jsonify({"message": "Car rented successfully"}), 201
 
 
-@rental_bp.route('/return/<int:rental_id>', methods=['POST'])
+@rental_bp.route('/return/<int:car_id>', methods=['POST'])
 @auth.login_required
 @role_required('user')
-def return_car(rental_id):
+def return_car(car_id):
 
-    rental = Rental.query.get_or_404(rental_id)
-    if rental.user_id != g.current_user.id or rental.end_date is not None:
-        return jsonify({"error": "Invalid rental"}), 400
+    rental = Rental.query.filter_by(
+        car_id=car_id,
+        user_id=g.current_user.id,
+        end_date=None
+    ).first()
+
+    if rental is None:
+        return jsonify({"error": "No active rental found"}), 404
 
     rental.end_date = datetime.utcnow()
 

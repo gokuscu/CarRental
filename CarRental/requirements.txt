@@ -1,0 +1,6 @@
+Flask
+Flask-SQLAlchemy
+Flask-Migrate
+Flask-HTTPAuth
+psycopg2-binary
+werkzeug
